@@ -21,4 +21,22 @@ def createItem(request):
 
 
     
+@api_view(['GET'])
+def getItem(request, pk):
+    try:
+        item = ItemModel.objects.get(pk=pk)
+    except ItemModel.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = ItemSerializers(item)
+    return Response(serializer.data,status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def deleteItem(request,pk):
+    try:
+        item = ItemModel.objects.get(pk=pk)
+        item.delete()
+        return Response({'message':'item deleted successfully'},status=status.HTTP_200_OK)
+    except ItemModel.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
