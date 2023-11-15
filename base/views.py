@@ -40,3 +40,16 @@ def deleteItem(request,pk):
     except ItemModel.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+@api_view(['POST'])
+def updateItem(request,pk):
+    try:
+        item = ItemModel.objects.get(pk=pk)
+    except ItemModel.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = ItemSerializers(item,data=request.data)
+    
+    if serializer.is_valid():
+        serializer.save()
+        return Response(status=status.HTTP_202_ACCEPTED)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
